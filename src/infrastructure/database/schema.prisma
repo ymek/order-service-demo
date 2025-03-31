@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["prismaSchemaFolder"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELED
+}
+
+// Using more granular messages than these based on the service
+// class messages. 
+enum OrderStatusReason {
+  INVALID_CUSTOMER
+  NO_INVENTORY
+  PAYMENT_FAILED
+}
+
+model Order {
+  id           String      @id @default(ulid())
+  customerId   String
+  storeId      String
+  status       OrderStatus @default(PENDING)
+  statusReason String?
+  total        Decimal
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  orderItems   OrderItem[]
+  shipments    Shipment[]
+}
+
+model OrderItem {
+  id        String  @id @default(ulid())
+  orderId   String
+  productId String
+  quantity  Int
+  price     Decimal
+  order     Order   @relation(fields: [orderId], references: [id])
+}
+
+model Shipment {
+  id              String  @id @default(ulid())
+  orderId         String
+  trackingNumber  String?
+  trackingCompany String?
+  order           Order   @relation(fields: [orderId], references: [id])
+  // @@id([orderId, trackingNumber])
+}
