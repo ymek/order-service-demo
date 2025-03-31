@@ -1,3 +1,7 @@
+# Architectural Notes
+Architectural notes and thought processes can be found in
+[ARCHITECTURE.md](https://github.com/ymek/order-service-demo/blob/main/ARCHITECTURE.md)
+
 # Local Development Setup
 
 > **NOTE:** Assumes `docker` and `docker-compose` are installed and available
@@ -55,4 +59,21 @@ $ pnpm install
 #### 5. Start the Application
 ```
 $ pnpm start:dev
+```
+
+#### 6. Create an Order
+
+Example Post to `http://localhost:3000/order`
+```
+{
+	"customerId": "4aec38d7c32f4cd6b4cb7ff02b",
+	"storeId": "4902549aaaea44f09a4362cc6b",
+	"items": [
+		{
+			"productId": "ef93e638f50b42e28721ad655e",
+			"quantity": 1,
+			"price": 10
+		}
+	]
+}
 ```
