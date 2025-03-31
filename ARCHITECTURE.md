@@ -138,6 +138,42 @@ Order Controller → Order Service
 
 ---
 
+## Deployment to Production
+
+### AWS Services and Deployment Architecture
+
+- **Compute and API Exposure:**  
+  The service would be deployed as containerized microservices using ECS or EKS. API Gateway would expose the REST endpoints for external clients. Alternatively, Lambda with API Gateway could be considered for a serverless approach.
+
+- **Database:**  
+  RDS (PostgreSQL or Aurora) would serve as the primary data store, ensuring high availability with multi-az deployments. In scenarios with extremely high read volume, DynamoDB could be introduced as a caching layer or for non-relational data.
+
+- **Messaging:**  
+  SNS and SQS power the event-driven architecture. SNS would fan out events to multiple SQS queues, each with appropriate filter policies.
+
+- **Storage:**  
+  S3 would be used for storing static assets, logs, and backups.
+
+- **Observability and Monitoring:**  
+  CloudWatch/OpenTelemetry integrations to monitor system performance, trace event flows, and identify bottlenecks or failures.
+  
+
+### Scalability, Availability, and Security
+
+- **Scalability:**  
+  Auto-scaling groups for ECS/EKS tasks or Lambda’s built-in scaling would be configured.
+
+- **High Availability:**  
+  Deployments would be multi-az to ensure resilience. AWS provides built-in fault tolerance and disaster recovery features.
+
+- **Security:**  
+  Security best practices include using IAM roles for service access, enforcing VPC isolation, encrypting data at rest and in transit (using TLS), and regularly auditing access logs. API Gateway would also handle authentication and rate limiting to secure the service endpoints.
+
+- **Infrastructure as Code:**  
+  Deployment could be automated using CDK or CloudFormation, ensuring consistent, reproducible environments. CI/CD pipelines (using GitHub Actions, etc.) would manage automated testing, integration, and deployment.
+  
+---
+
 ## Future Work
 
 If given more time, the following would be prioritized:
